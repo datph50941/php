@@ -1,0 +1,11 @@
+2025-05-07 15:19:24 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:19:46 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:20:37 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:20:40 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:20:45 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:21:08 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:22:13 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:22:16 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:22:38 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:24:28 - Lỗi: Dữ liệu không hợp lệ
+2025-05-07 15:24:46 - Lỗi: Dữ liệu không hợp lệ
