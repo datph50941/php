@@ -1,0 +1,12 @@
+{
+    "customer_email": "nguyenduydat2005@gmail.com",
+    "products": [
+        {
+            "title": "Clean Code",
+            "quantity": 6,
+            "price": 150000
+        }
+    ],
+    "total_amount": 900000,
+    "created_at": "2025-05-11 11:11:33"
+}
