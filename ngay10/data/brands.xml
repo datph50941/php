@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brands>
+    <brand>
+        <name>Samsung</name>
+        <category>electronics</category>
+    </brand>
+    <brand>
+        <name>Apple</name>
+        <category>electronics</category>
+    </brand>
+    <brand>
+        <name>Gucci</name>
+        <category>fashion</category>
+    </brand>
+    <brand>
+        <name>Zara</name>
+        <category>fashion</category>
+    </brand>
+</brands>

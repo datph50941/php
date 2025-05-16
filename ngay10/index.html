@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Website Thương Mại Điện Tử</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .product-list, .product-details, .reviews, .search-results, .poll-results { margin: 20px 0; }
+        .product-item { cursor: pointer; padding: 10px; border: 1px solid #ddd; margin: 5px 0; }
+        .search-box { width: 100%; padding: 10px; }
+        .cart-count { font-weight: bold; }
+        .poll-option { margin: 10px 0; }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // 3.1 Lấy chi tiết sản phẩm
+        function loadProductDetails(productId) {
+            fetch(`product_details.php?id=${productId}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('product-details').innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // 3.2 Thêm vào giỏ hàng
+        function addToCart(productId) {
+            $.ajax({
+                url: 'cart.php',
+                type: 'POST',
+                data: { product_id: productId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        document.getElementById('cart-count').textContent = response.cartCount;
+                    }
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // 3.3 Hiển thị đánh giá
+        function loadReviews(productId) {
+            fetch(`reviews.php?product_id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<h3>Đánh giá</h3>';
+                    data.forEach(review => {
+                        html += `<p><strong>${review.user}</strong>: ${review.comment} (${review.rating}/5)</p>`;
+                    });
+                    document.getElementById('reviews').innerHTML = html;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // 3.4 Lấy danh sách thương hiệu từ XML
+        function loadBrands(category) {
+            fetch(`brands.php?category=${category}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('brand-select').innerHTML = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // 3.5 Tìm kiếm thời gian thực
+        function liveSearch() {
+            const query = document.getElementById('search-box').value;
+            if (query.length < 2) {
+                document.getElementById('search-results').innerHTML = '';
+                return;
+            }
+            fetch(`search.php?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<h3>Kết quả tìm kiếm</h3>';
+                    data.forEach(product => {
+                        html += `<div><strong>${product.name}</strong> - ${product.price} VNĐ</div>`;
+                    });
+                    document.getElementById('search-results').innerHTML = html;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // 3.6 Bình chọn
+        function submitPoll() {
+            const selected = document.querySelector('input[name="poll"]:checked');
+            if (!selected) return;
+            $.ajax({
+                url: 'poll.php',
+                type: 'POST',
+                data: { option: selected.value },
+                dataType: 'json',
+                success: function(response) {
+                    let html = '<h3>Kết quả bình chọn</h3>';
+                    for (let option in response) {
+                        html += `<p>${option}: ${response[option]}%</p>`;
+                    }
+                    document.getElementById('poll-results').innerHTML = html;
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Debounce cho tìm kiếm
+        let searchTimeout;
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(liveSearch, 300);
+        }
+    </script>
+</head>
+<body>
+    <h1>Website Thương Mại Điện Tử</h1>
+    
+    <!-- Danh sách sản phẩm -->
+    <div class="product-list">
+        <h2>Sản phẩm</h2>
+        <div class="product-item" onclick="loadProductDetails(1); loadReviews(1)">Sản phẩm 1</div>
+        <div class="product-item" onclick="loadProductDetails(2); loadReviews(2)">Sản phẩm 2</div>
+    </div>
+
+    <!-- Chi tiết sản phẩm -->
+    <div id="product-details" class="product-details"></div>
+
+    <!-- Đánh giá -->
+    <div id="reviews" class="reviews"></div>
+
+    <!-- Giỏ hàng -->
+    <div>Giỏ hàng: <span id="cart-count">0</span> sản phẩm</div>
+    <button onclick="addToCart(1)">Thêm SP1 vào giỏ</button>
+    <button onclick="addToCart(2)">Thêm SP2 vào giỏ</button>
+
+    <!-- Thương hiệu -->
+    <div>
+        <h2>Chọn ngành hàng</h2>
+        <select onchange="loadBrands(this.value)">
+            <option value="">Chọn ngành hàng</option>
+            <option value="electronics">Điện tử</option>
+            <option value="fashion">Thời trang</option>
+        </select>
+        <select id="brand-select"></select>
+    </div>
+
+    <!-- Tìm kiếm -->
+    <div>
+        <h2>Tìm kiếm sản phẩm</h2>
+        <input type="text" id="search-box" class="search-box" onkeyup="debounceSearch()" placeholder="Nhập tên sản phẩm...">
+        <div id="search-results" class="search-results"></div>
+    </div>
+
+    <!-- Bình chọn -->
+    <div>
+        <h2>Bạn muốn cải thiện gì?</h2>
+        <div class="poll-option">
+            <input type="radio" name="poll" value="Giao diện"> Giao diện<br>
+            <input type="radio" name="poll" value="Tốc độ"> Tốc độ<br>
+            <input type="radio" name="poll" value="Dịch vụ khách hàng"> Dịch vụ khách hàng<br>
+            <button onclick="submitPoll()">Gửi bình chọn</button>
+        </div>
+        <div id="poll-results" class="poll-results"></div>
+    </div>
+</body>
+</html>
